@@ -4,59 +4,105 @@ import ProductManagement from './ProductManagement';
 import UsersManagement from './UsersManagement';
 import Dashboard from './Dashboard';
 import Login from './Login';
-import Logout from './Logout'; // Import the Logout component
 
 function App() {
     const [activeSection, setActiveSection] = useState('dashboard');
     const [products, setProducts] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // Load login status from localStorage when the app mounts
+    // Load data from localStorage when the app mounts
     useEffect(() => {
-        const storedProducts = localStorage.getItem('products');
-        if (storedProducts) {
-            setProducts(JSON.parse(storedProducts));
-        }
         const loginStatus = localStorage.getItem('isLoggedIn');
         setIsLoggedIn(loginStatus === 'true');
+        if (loginStatus === 'true') {
+            fetchProducts(); // Fetch products only when logged in
+        }
     }, []);
 
-    // Update localStorage whenever products state changes
-    useEffect(() => {
-        localStorage.setItem('products', JSON.stringify(products));
-    }, [products]);
+    // Fetch products from the backend API
+    const fetchProducts = async () => {
+        try {
+            const response = await fetch('http://localhost:5300/products');
+            if (!response.ok) throw new Error('Failed to fetch products');
+            const data = await response.json();
+            setProducts(data);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    };
 
-    // Function to handle section visibility
+    // Handle section navigation
     const showSection = (sectionId) => {
         setActiveSection(sectionId);
     };
 
     // Add a new product
-    const addProduct = (newProduct) => {
-        setProducts((prevProducts) => [...prevProducts, newProduct]);
+    const addProduct = async (newProduct) => {
+        try {
+            const response = await fetch('http://localhost:5300/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newProduct),
+            });
+            if (!response.ok) throw new Error('Failed to add product');
+            const addedProduct = await response.json();
+            setProducts((prevProducts) => [...prevProducts, addedProduct]);
+        } catch (error) {
+            console.error('Error adding product:', error);
+        }
     };
 
     // Update an existing product
-    const updateProduct = (index, updatedProduct) => {
-        const updatedProducts = products.map((product, i) =>
-            i === index ? updatedProduct : product
-        );
-        setProducts(updatedProducts);
+    const updateProduct = async (id, updatedProduct) => {
+        try {
+            const response = await fetch(`http://localhost:5300/products/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedProduct),
+            });
+            if (!response.ok) throw new Error('Failed to update product');
+            const data = await response.json();
+            setProducts((prevProducts) =>
+                prevProducts.map((product) =>
+                    product.id === id ? { ...product, ...data } : product
+                )
+            );
+        } catch (error) {
+            console.error('Error updating product:', error);
+        }
     };
 
     // Delete a product
-    const deleteProduct = (index) => {
-        const updatedProducts = products.filter((_, i) => i !== index);
-        setProducts(updatedProducts);
+    const deleteProduct = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5300/products/${id}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) throw new Error('Failed to delete product');
+            setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
+        } catch (error) {
+            console.error('Error deleting product:', error);
+        }
     };
 
-    // Handle successful login
-    const handleLogin = () => {
-        setIsLoggedIn(true);
-        localStorage.setItem('isLoggedIn', 'true');
+    // Handle login logic
+    const handleLogin = async (credentials) => {
+        try {
+            const response = await fetch('http://localhost:5300/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(credentials),
+            });
+            if (!response.ok) throw new Error('Invalid login credentials');
+            setIsLoggedIn(true);
+            localStorage.setItem('isLoggedIn', 'true');
+            fetchProducts(); // Fetch products after login
+        } catch (error) {
+            console.error('Error during login:', error);
+        }
     };
 
-    // Handle logout
+    // Handle logout logic
     const handleLogout = () => {
         setIsLoggedIn(false);
         localStorage.setItem('isLoggedIn', 'false');
@@ -73,38 +119,20 @@ function App() {
             ) : (
                 <>
                     <nav>
-                        <button
-                            className={activeSection === 'dashboard' ? 'active' : ''}
-                            onClick={() => showSection('dashboard')}
-                        >
-                            Dashboard
-                        </button>
-                        <button
-                            className={activeSection === 'productManagement' ? 'active' : ''}
-                            onClick={() => showSection('productManagement')}
-                        >
-                            Product Management
-                        </button>
-                        <button
-                            className={activeSection === 'usersManagement' ? 'active' : ''}
-                            onClick={() => showSection('usersManagement')}
-                        >
-                            Users Management
-                        </button>
-                        <button onClick={handleLogout}>Logout</button> {/* Logout button */}
+                        <button onClick={() => showSection('dashboard')}>Dashboard</button>
+                        <button onClick={() => showSection('products')}>Products</button>
+                        <button onClick={handleLogout}>Logout</button>
                     </nav>
-                    <main>
-                        {activeSection === 'dashboard' && <Dashboard products={products} />}
-                        {activeSection === 'productManagement' && (
-                            <ProductManagement
-                                products={products}
-                                addProduct={addProduct}
-                                updateProduct={updateProduct}
-                                deleteProduct={deleteProduct}
-                            />
-                        )}
-                        {activeSection === 'usersManagement' && <UsersManagement />}
-                    </main>
+
+                    {activeSection === 'dashboard' && <Dashboard />}
+                    {activeSection === 'products' && (
+                        <ProductManagement
+                            products={products}
+                            addProduct={addProduct}
+                            updateProduct={updateProduct}
+                            deleteProduct={deleteProduct}
+                        />
+                    )}
                 </>
             )}
         </div>
