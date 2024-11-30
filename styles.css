@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #0f2a05;
+    background-color: #f5f7f9; /* Soft light background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,12 +12,12 @@ body {
 }
 
 header {
-    background-color: #1a504e;
-    color: #b09898;
+    background-color: #0d4b6e; /* Deep blue */
+    color: #f1f1f1; /* Light text for contrast */
     text-align: center;
     padding: 1.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: 1 rem;
+    font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
     width: 100%;
@@ -28,24 +28,24 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px; /* Adjust based on your navbar height */
-    background-color: #333; /* Example background */
-    z-index: 1000; /* Keep navbar on top of other content */
-    display: flex; /* Added */
-    justify-content: center; /* Added */
-    align-items: center; /* Added */
+    height: 60px;
+    background-color: #263238; /* Dark grey-blue */
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 nav {
-    display: flex; /* Added */
-    justify-content: center; /* Added */
-    align-items: center; /* Added */
-    gap: 20px; /* Adjust as needed for spacing between buttons */
-    width: 100%; /* Ensures buttons span across */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
 }
 nav button {
-    background-color: #222831;
+    background-color: #37474f; /* Dark teal */
     color: #fff;
-    border: 1px solid #393e46;
+    border: 1px solid #607d8b; /* Lighter teal border */
     padding: 12px 24px;
     cursor: pointer;
     border-radius: 5px;
@@ -55,13 +55,13 @@ nav button {
 }
 
 nav button:hover {
-    background-color:  #6a670c;
+    background-color: #00796b; /* Greenish shade */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 nav button.active {
-    background-color: #95911e;
-    color: #ca9090;
+    background-color: #004d40; /* Darker shade */
+    color: #b2dfdb; /* Light green */
 }
 
 /* Main Section */
@@ -77,20 +77,18 @@ main {
 }
 
 /* Login Section Styling */
-/* Login Form Container */
 #login {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 35px 230px;
-    background: linear-gradient(135deg, #616b7a, #406eb7); /* Subtle gradient */
+    background: linear-gradient(135deg, #5e35b1, #1e88e5); /* Gradient from purple to blue */
     border-radius: 15px;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
     width: 100%;
     max-width: 400px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 
 #login:hover {
     transform: translateY(-5px);
@@ -100,7 +98,7 @@ main {
 /* Heading Styling */
 #login h2 {
     margin-bottom: 20px;
-    color:  #6d6a11;
+    color: #ffffff; /* White text for contrast */
     font-size: 1.8rem;
     font-weight: bold;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
@@ -114,16 +112,16 @@ main {
     margin: 10px 0;
     border: none;
     border-radius: 8px;
-    background: rgba(102, 74, 74, 0.85);
+    background: rgba(255, 255, 255, 0.85); /* Light input fields */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     font-size: 1rem;
-    color:  #605d10;
+    color: #333;
     transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 #login input[type="text"]:focus, 
 #login input[type="password"]:focus {
-    background: rgb(85, 61, 61);
+    background: #d1c4e9; /* Light lavender */
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
     outline: none;
 }
@@ -133,8 +131,8 @@ main {
     width: 100%;
     padding: 15px;
     margin-top: 20px;
-    background: linear-gradient(135deg,  #565304, #043a1b); /* Blue to green gradient */
-    color: #504646;
+    background: linear-gradient(135deg, #2e7d32, #00796b); /* Green to teal gradient */
+    color: #ffffff;
     font-size: 1rem;
     font-weight: bold;
     border: none;
@@ -146,7 +144,7 @@ main {
 
 #login button:hover {
     transform: scale(1.03);
-    background: linear-gradient(135deg, #324a3c, #4492c5); /* Gradient reversed */
+    background: linear-gradient(135deg, #004d40, #0288d1); /* Darker gradient */
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -166,7 +164,6 @@ main {
     }
 }
 
-
 /* Form Styling */
 form {
     display: flex;
@@ -177,14 +174,14 @@ form {
 
 input {
     padding: 14px;
-    border: 1px solid #8b5a5a;
+    border: 1px solid #9e9e9e;
     border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
 input:focus {
-    border-color: #344513;
+    border-color: #0288d1; /* Blue focus border */
     box-shadow: 0 0 8px rgba(47, 93, 96, 0.3);
     outline: none;
 }
@@ -192,8 +189,8 @@ input:focus {
 /* Button Styling */
 button {
     padding: 14px;
-    background-color: #4c4a07;
-    color: #944c4c;
+    background-color: #388e3c; /* Green */
+    color: #ffffff;
     border: none;
     border-radius: 6px;
     font-size: 1rem;
@@ -203,7 +200,7 @@ button {
 }
 
 button:hover {
-    background-color: #3f7f82;
+    background-color: #00796b; /* Teal */
     transform: scale(1.03);
 }
 
@@ -234,4 +231,10 @@ button:hover {
         padding: 12px;
         font-size: 0.95rem;
     }
+}
+
+.error-message {
+    color: #f44336; /* Red for error messages */
+    font-size: 14px;
+    margin-top: 10px;
 }
