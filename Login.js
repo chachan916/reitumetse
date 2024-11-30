@@ -4,11 +4,21 @@ import './styles.css';
 function Login({ onLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [isRegistering, setIsRegistering] = useState(false);
+    const [isRegistering, setIsRegistering] = useState(false); // State to toggle between login and register
+    const [loading, setLoading] = useState(false); // State to handle loading
+    const [error, setError] = useState(''); // State for error messages
 
     // Handle login
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (!username || !password) {
+            alert('Please fill in both fields.');
+            return;
+        }
+        
+        setLoading(true); // Start loading
+        setError(''); // Reset error state
+
         try {
             const response = await fetch('http://localhost:5300/login', {
                 method: 'POST',
@@ -19,18 +29,30 @@ function Login({ onLogin }) {
             if (response.ok) {
                 onLogin(); // Calls the parent component's login function
                 alert(data.message);
+                setUsername(''); // Clear input fields
+                setPassword('');
             } else {
-                alert(data.error);
+                setError(data.error || 'Login failed. Please try again.');
             }
         } catch (error) {
             console.error(error);
-            alert('Login failed. Please try again.');
+            setError('Login failed. Please check your connection and try again.');
+        } finally {
+            setLoading(false); // End loading
         }
     };
 
     // Handle registration
     const handleRegister = async (e) => {
         e.preventDefault();
+        if (!username || !password) {
+            alert('Please fill in both fields.');
+            return;
+        }
+
+        setLoading(true); // Start loading
+        setError(''); // Reset error state
+
         try {
             const response = await fetch('http://localhost:5300/register', {
                 method: 'POST',
@@ -41,12 +63,16 @@ function Login({ onLogin }) {
             if (response.ok) {
                 alert(data.message);
                 setIsRegistering(false); // Switch back to login mode
+                setUsername(''); // Clear input fields
+                setPassword('');
             } else {
-                alert(data.error);
+                setError(data.error || 'Registration failed. Please try again.');
             }
         } catch (error) {
             console.error(error);
-            alert('Registration failed. Please try again.');
+            setError('Registration failed. Please check your connection and try again.');
+        } finally {
+            setLoading(false); // End loading
         }
     };
 
@@ -68,8 +94,11 @@ function Login({ onLogin }) {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit">{isRegistering ? 'Register' : 'Login'}</button>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Loading...' : isRegistering ? 'Register' : 'Login'}
+                </button>
             </form>
+            {error && <p className="error-message">{error}</p>}
             <button onClick={() => setIsRegistering(!isRegistering)}>
                 {isRegistering ? 'Have an account? Login' : 'No account? Register'}
             </button>
